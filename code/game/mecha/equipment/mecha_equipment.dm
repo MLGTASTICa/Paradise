@@ -157,3 +157,14 @@
 /obj/item/mecha_parts/mecha_equipment/proc/log_message(message)
 	if(chassis)
 		chassis.log_message("<i>[src]:</i> [message]")
+
+/obj/item/mecha_parts/mecha_equipment
+	name = "mech afterburner"
+	icon = 'icons/mecha/mecha_equipment.dmi'
+	icon_state = "mecha_equip"
+	force = 5
+	origin_tech = "materials=2;engineering=2"
+	max_integrity = 300
+	selectable = TRUE
+	harmful = TRUE
+
