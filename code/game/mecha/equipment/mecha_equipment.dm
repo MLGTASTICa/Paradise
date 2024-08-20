@@ -158,13 +158,27 @@
 	if(chassis)
 		chassis.log_message("<i>[src]:</i> [message]")
 
-/obj/item/mecha_parts/mecha_equipment
-	name = "mech afterburner"
-	icon = 'icons/mecha/mecha_equipment.dmi'
-	icon_state = "mecha_equip"
-	force = 5
-	origin_tech = "materials=2;engineering=2"
-	max_integrity = 300
+/obj/item/mecha_parts/mecha_equipment/afterburner
+	name = "\improper CL-56 \"Hardlight\" Afterburner"
+	desc = "A powerful thruster designed for small shuttles, retrofitted for exosuits despite better judgement. Redirects power from all other equipment during use. It has a warning label against mounting to anything not secured."
+	icon_state = "mecha_afterburner"
 	selectable = TRUE
-	harmful = TRUE
 
+/obj/item/mecha_parts/mecha_equipment/afterburner/can_attach(obj/mecha/new_mecha)
+	if(locate(type) in new_mecha.equipment)
+		return FALSE // no stacking multiple afterburners to get around the cooldown
+	return ..()
+
+/obj/item/mecha_parts/mecha_equipment/afterburner/action(atom/target)
+	. = ..()
+	RegisterSignal(chassis, COMSIG_MOVABLE_MOVED, PROC_REF(after_move))
+	RegisterSignal(chassis, COMSIG_MOVABLE_BUMP, PROC_REF(on_bump))
+	addtimer(CALLBACK(src, PROC_REF(stop_listening), chassis), 3 SECONDS)
+/obj/item/mecha_parts/mecha_equipment/afterburner/proc/stop_listening(atom/target)
+
+
+/obj/item/mecha_parts/mecha_equipment/afterburner/proc/after_move()
+	var/turf/chassis_turf = get_turf(chassis)
+	if(!chassis.throwing || !chassis.has_gravity())
+		return
+	playsound(chassis.loc, chassis.stepsound, 50, TRUE)
