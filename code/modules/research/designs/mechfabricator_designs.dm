@@ -682,6 +682,15 @@
 	construction_time = 10 SECONDS
 	category = list("Exosuit Equipment")
 
+/datum/design/mech_afterburner
+	name = "Exosuit equipment (Mech CL-56 Afterburner)"
+	id = "mech_afterburner"
+	build_type = MECHFAB
+	req_tech = list("engineering"=5)
+	materials = list(MAT_METAL=10000)
+	category = list("Exosuit equipment")
+	build_path = /obj/item/mecha_parts/mecha_equipment/afterburner
+
 /datum/design/mech_lmg
 	name = "Exosuit Weapon (\"Ultra AC 2\" LMG)"
 	id = "mech_lmg"

@@ -186,17 +186,13 @@
 	if(QDELETED(chassis.occupant))
 		return
 	if(last_use > world.time)
-		chassis.occupant_message("\The [src] has not recharged yet!")
+		chassis.occupant_message("The [src] has not recharged yet!")
 		return
 	var/turf/targ = get_turf(target)
 	if(!QDELETED(targ))
 		last_use = world.time + use_delay
 		update_icon_state()
 		movement_loop(targ, 6)
-
-/obj/item/mecha_parts/mecha_equipment/afterburner/proc/stop_movement_loop()
-	last_use = world.time + use_delay
-	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/mecha_parts/mecha_equipment/afterburner,update_icon_state)), use_delay + 0.5 SECONDS)
 
 /obj/item/mecha_parts/mecha_equipment/afterburner/update_icon_state()
 	. = ..()
@@ -206,13 +202,19 @@
 			return
 	icon_state = initial(icon_state)
 
+/obj/item/mecha_parts/mecha_equipment/afterburner/proc/stop_movement_loop()
+	last_use = world.time + use_delay
+	update_icon_state()
+	spawn(use_delay + 5)
+		update_icon_state()
+
 /obj/item/mecha_parts/mecha_equipment/afterburner/proc/movement_loop(turf/target, steps)
 	var/turf/step_turf = get_step(chassis, get_dir(chassis, target))
 	if(step_turf == get_turf(chassis))
 		return stop_movement_loop()
-	//// we have to check for leaving because of directional windows >:(
+
 	for(var/obj/thing in get_turf(chassis))
-		if(isitem(thing) || thing == src)
+		if(isitem(thing) || thing == chassis)
 			continue
 		if(!thing.CanPass(chassis, step_turf, TRUE))
 			thing.take_damage(200)
@@ -227,12 +229,20 @@
 			if(!QDELETED(thing))
 				return stop_movement_loop()
 
+	for(var/mob/living/animal in step_turf)
+		if(animal.resting)
+			continue
+		animal.take_overall_damage(25, 0, TRUE, src)
+		animal.AdjustWeakened(3, TRUE)
+		animal.throw_at(pick(block(step_turf.x-1, step_turf.y-1, step_turf.z, step_turf.x+1 , step_turf.y+1, step_turf.z)), 2, 1, null)
+
 	chassis.Move(step_turf)
 	if(get_turf(chassis) != step_turf)
 		return stop_movement_loop()
 	if(has_gravity(chassis, step_turf))
 		playsound(get_turf(chassis), chassis.stepsound, 200, TRUE)
 		if(steps > 0)
-			addtimer(CALLBACK(src, PROC_REF(movement_loop), target, steps-1), 1)
+			spawn(1)
+				.(target, --steps)
 			return
 	stop_movement_loop()
