@@ -752,31 +752,31 @@ emp_act
 		var/armor_block = run_armor_check(affecting, MELEE)
 		apply_damage(damage, BRUTE, affecting, armor_block)
 
-/mob/living/carbon/human/mech_melee_attack(obj/mecha/M)
+/mob/living/carbon/human/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
 	if(M.occupant.a_intent == INTENT_HARM)
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
 			return
 		M.do_attack_animation(src)
-		if(M.damtype == "brute")
+		if(damage_type == BRUTE)
 			step_away(src,M,15)
 		var/obj/item/organ/external/affecting = get_organ(pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
 		if(affecting)
 			var/update = 0
-			var/dmg = rand(M.force/2, M.force)
-			switch(M.damtype)
-				if("brute")
+			var/dmg = rand(damage/2, damage)
+			switch(damage_type)
+				if(BRUTE)
 					apply_damage(dmg, STAMINA)
-					if(M.force > 35) // durand and other heavy mechas
+					if(damage > 35) // durand and other heavy mechas
 						KnockDown(6 SECONDS)
-					else if(M.force > 20 && !IsKnockedDown()) // lightweight mechas like gygax
+					else if(damage > 20 && !IsKnockedDown()) // lightweight mechas like gygax
 						KnockDown(4 SECONDS)
 					update |= affecting.receive_damage(dmg, 0)
 					playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
-				if("fire")
+				if(FIRE)
 					update |= affecting.receive_damage(dmg, 0)
 					playsound(src, 'sound/items/welder.ogg', 50, TRUE)
-				if("tox")
+				if(TOX)
 					M.mech_toxin_damage(src)
 				else
 					return
@@ -788,6 +788,7 @@ emp_act
 		visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='userdanger'>[M.name] hits you!</span>")
 
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
+		return maxHealth - health
 	else
 		..()
 

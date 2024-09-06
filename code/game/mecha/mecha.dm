@@ -907,7 +907,7 @@
 			to_chat(user, "<span class='notice'>[src] is at full integrity!</span>")
 	repairing = FALSE
 
-/obj/mecha/mech_melee_attack(obj/mecha/M)
+/obj/mecha/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
 	if(!has_charge(melee_energy_drain))
 		return FALSE
 	use_power(melee_energy_drain)

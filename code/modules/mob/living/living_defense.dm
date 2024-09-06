@@ -150,23 +150,24 @@
 	return ..()
 
 
-/mob/living/mech_melee_attack(obj/mecha/M)
+/mob/living/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
 	if(M.occupant.a_intent == INTENT_HARM)
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
 			return
 		M.do_attack_animation(src)
-		if(M.damtype == "brute")
+		if(damage_type == BRUTE)
 			step_away(src,M,15)
-		switch(M.damtype)
-			if("brute")
+		switch(damage_type)
+			if(BRUTE)
 				Paralyse(2 SECONDS)
-				take_overall_damage(rand(M.force/2, M.force))
+				take_overall_damage(rand(damage/2, damage))
 				playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
-			if("fire")
-				take_overall_damage(0, rand(M.force/2, M.force))
+				take_overall_damage(rand(damage/2, damage))
+			if(FIRE)
 				playsound(src, 'sound/items/welder.ogg', 50, TRUE)
-			if("tox")
+				take_overall_damage(0, rand(damage/2, damage))
+			if(TOX)
 				M.mech_toxin_damage(src)
 			else
 				return
@@ -174,6 +175,7 @@
 		M.occupant_message("<span class='danger'>You hit [src].</span>")
 		visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='userdanger'>[M.name] hits you!</span>")
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
+		return maxHealth - health
 	else
 		step_away(src,M)
 		add_attack_logs(M.occupant, src, "Mecha-pushed with [M]", ATKLOG_ALL)

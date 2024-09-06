@@ -30,8 +30,8 @@
 /turf/simulated/floor/indestructible/attack_animal(mob/living/simple_animal/M)
 	return
 
-/turf/simulated/floor/indestructible/mech_melee_attack(obj/mecha/M)
-	return
+/turf/simulated/floor/indestructible/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
+	return 0
 
 /turf/simulated/floor/indestructible/airless
 	oxygen = 0
