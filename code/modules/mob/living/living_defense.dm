@@ -157,23 +157,27 @@
 			return
 		if(damage_type == BRUTE)
 			step_away(src,M,15)
+		var/damage_store = hitter.force
+		hitter.force = damage
 		switch(damage_type)
 			if(BRUTE)
 				Paralyse(2 SECONDS)
-				take_overall_damage(rand(damage/2, damage))
-				take_overall_damage(rand(damage/2, damage))
+				attacked_by(hitter, M?.occupant, M?.occupant.zone_selected)
 			if(FIRE)
-				playsound(src, 'sound/items/welder.ogg', 50, TRUE)
-				take_overall_damage(0, rand(damage/2, damage))
+				attacked_by(hitter, M?.occupant, M?.occupant.zone_selected)
 			if(TOX)
 				M.mech_toxin_damage(src)
 			else
 				return
 		updatehealth("mech melee attack")
+		M.visible_message("<span class='userdanger'>[M] attacks [src]!</span>")
+		visible_message("<span class='userdanger'>[src] is hit with [M]'s [hitter]</span>", "<span class='userdanger'>[M] attacks you with their [hitter]</span>")
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
 		return maxHealth - health
 	else
 		step_away(src,M)
+		M.visible_message("<span class='warning'>[M] pushes [src]!</span>")
+		visible_message("<span class='warning'>[src] is pushed by [M]'s [hitter]</span>", "<span class='warning'>[M] pushes you with their [hitter]</span>")
 		add_attack_logs(M.occupant, src, "Mecha-pushed with [M]", ATKLOG_ALL)
 		return 0
 

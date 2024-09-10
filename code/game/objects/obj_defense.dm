@@ -134,7 +134,8 @@
 	attack_generic(user, rand(10, 15), BRUTE, MELEE, 1)
 
 /obj/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	return take_damage(damage, damage_type, MELEE, TRUE, get_dir(src, M)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	M.visible_message("[M] hits [src]!")
+	return take_damage(damage, damage_type, MELEE, TRUE, get_dir(src, M))
 
 /obj/singularity_act()
 	ex_act(EXPLODE_DEVASTATE)

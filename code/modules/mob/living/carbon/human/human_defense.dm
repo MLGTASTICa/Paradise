@@ -761,29 +761,19 @@ emp_act
 		if(damage_type == BRUTE)
 			step_away(src,M,15)
 		var/obj/item/organ/external/affecting = get_organ(pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
-		if(affecting)
-			var/update = 0
-			var/dmg = rand(damage/2, damage)
-			switch(damage_type)
-				if(BRUTE)
-					apply_damage(dmg, STAMINA)
-					if(damage > 35) // durand and other heavy mechas
-						KnockDown(6 SECONDS)
-					else if(damage > 20 && !IsKnockedDown()) // lightweight mechas like gygax
-						KnockDown(4 SECONDS)
-					update |= affecting.receive_damage(dmg, 0)
-				if(FIRE)
-					update |= affecting.receive_damage(dmg, 0)
-				if(TOX)
-					M.mech_toxin_damage(src)
-				else
-					return
-			if(update)
-				UpdateDamageIcon()
-			updatehealth("mech melee attack")
-
-		to_chat(src, "<span class='userdanger'>[M.name] hits you!</span>")
-
+		attacked_by(hitter, M?.occupant, pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
+		switch(damage_type)
+			if(BRUTE)
+				apply_damage(damage/2, STAMINA)
+				if(damage > 35) // durand and other heavy mechas
+					KnockDown(6 SECONDS)
+				else if(damage > 20 && !IsKnockedDown()) // lightweight mechas like gygax
+					KnockDown(4 SECONDS)
+			if(TOX)
+				M.mech_toxin_damage(src)
+		updatehealth("mech melee attack")
+		M.visible_message("<span class='userdanger'>[M] attacks [src]!</span>")
+		visible_message("<span class='userdanger'>[src] is hit with [M]'s [hitter]</span>", "<span class='userdanger'>[M] attacks you with their [hitter]</span>")
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
 		return maxHealth - health
 	else
