@@ -134,18 +134,7 @@
 	attack_generic(user, rand(10, 15), BRUTE, MELEE, 1)
 
 /obj/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	M.do_attack_animation(src)
-	switch(damage_type)
-		if(BRUTE)
-			playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
-		if(BURN)
-			playsound(src, 'sound/items/welder.ogg', 50, TRUE)
-		if(TOX)
-			playsound(src, 'sound/effects/spray2.ogg', 50, TRUE)
-		else
-			return 0
-	M.visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>")
-	return take_damage(damage*3, damage_type, MELEE, TRUE, get_dir(src, M)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(damage, damage_type, MELEE, TRUE, get_dir(src, M)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
 
 /obj/singularity_act()
 	ex_act(EXPLODE_DEVASTATE)

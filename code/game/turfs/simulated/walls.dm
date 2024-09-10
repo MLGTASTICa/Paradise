@@ -215,22 +215,15 @@
 		..()
 
 /turf/simulated/wall/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	M.do_attack_animation(src)
 	switch(damage_type)
 		if(BRUTE)
-			playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
-			M.visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='danger'>You hit [src]!</span>")
 			if(prob(hardness + damage_type) && damage > 20)
 				dismantle_wall(1)
 				playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
-			else
-				add_dent(PROJECTILE_IMPACT_WALL_DENT_HIT)
-			return damage
-		if(BURN)
-			playsound(src, 'sound/items/welder.ogg', 100, TRUE)
-		if(TOX)
-			playsound(src, 'sound/effects/spray2.ogg', 100, TRUE)
-			return FALSE
+				return damage
+			add_dent(PROJECTILE_IMPACT_WALL_DENT_HIT)
+			return 0
+
 
 // Wall-rot effect, a nasty fungus that destroys walls.
 /turf/simulated/wall/proc/rot()

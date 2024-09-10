@@ -772,10 +772,8 @@ emp_act
 					else if(damage > 20 && !IsKnockedDown()) // lightweight mechas like gygax
 						KnockDown(4 SECONDS)
 					update |= affecting.receive_damage(dmg, 0)
-					playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
 				if(FIRE)
 					update |= affecting.receive_damage(dmg, 0)
-					playsound(src, 'sound/items/welder.ogg', 50, TRUE)
 				if(TOX)
 					M.mech_toxin_damage(src)
 				else
@@ -784,8 +782,7 @@ emp_act
 				UpdateDamageIcon()
 			updatehealth("mech melee attack")
 
-		M.occupant_message("<span class='danger'>You hit [src].</span>")
-		visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='userdanger'>[M.name] hits you!</span>")
+		to_chat(src, "<span class='userdanger'>[M.name] hits you!</span>")
 
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
 		return maxHealth - health

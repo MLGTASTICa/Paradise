@@ -155,14 +155,12 @@
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
 			return
-		M.do_attack_animation(src)
 		if(damage_type == BRUTE)
 			step_away(src,M,15)
 		switch(damage_type)
 			if(BRUTE)
 				Paralyse(2 SECONDS)
 				take_overall_damage(rand(damage/2, damage))
-				playsound(src, 'sound/weapons/punch4.ogg', 50, TRUE)
 				take_overall_damage(rand(damage/2, damage))
 			if(FIRE)
 				playsound(src, 'sound/items/welder.ogg', 50, TRUE)
@@ -172,15 +170,12 @@
 			else
 				return
 		updatehealth("mech melee attack")
-		M.occupant_message("<span class='danger'>You hit [src].</span>")
-		visible_message("<span class='danger'>[M.name] hits [src]!</span>", "<span class='userdanger'>[M.name] hits you!</span>")
 		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
 		return maxHealth - health
 	else
 		step_away(src,M)
 		add_attack_logs(M.occupant, src, "Mecha-pushed with [M]", ATKLOG_ALL)
-		M.occupant_message("<span class='warning'>You push [src] out of the way.</span>")
-		visible_message("<span class='warning'>[M] pushes [src] out of the way.</span>")
+		return 0
 
 //Mobs on Fire
 /mob/living/proc/IgniteMob()
