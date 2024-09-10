@@ -760,7 +760,6 @@ emp_act
 		M.do_attack_animation(src)
 		if(damage_type == BRUTE)
 			step_away(src,M,15)
-		var/obj/item/organ/external/affecting = get_organ(pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
 		attacked_by(hitter, M?.occupant, pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
 		switch(damage_type)
 			if(BRUTE)

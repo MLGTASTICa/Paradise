@@ -167,8 +167,8 @@
 				attacked_by(hitter, M?.occupant, M?.occupant.zone_selected)
 			if(TOX)
 				M.mech_toxin_damage(src)
-			else
-				return
+		hitter.force = damage_store
+
 		updatehealth("mech melee attack")
 		M.visible_message("<span class='userdanger'>[M] attacks [src]!</span>")
 		visible_message("<span class='userdanger'>[src] is hit with [M]'s [hitter]</span>", "<span class='userdanger'>[M] attacks you with their [hitter]</span>")
