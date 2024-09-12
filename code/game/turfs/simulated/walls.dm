@@ -217,7 +217,7 @@
 /turf/simulated/wall/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
 	switch(damage_type)
 		if(BRUTE)
-			if(prob(hardness + damage_type) && damage > 20)
+			if(prob(hardness + damage) && damage > 20)
 				dismantle_wall(1)
 				playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 				return damage
