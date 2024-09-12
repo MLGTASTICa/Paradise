@@ -73,7 +73,32 @@
 /obj/item/mecha_parts/mecha_equipment/melee/sword
 	name = "mecha sword"
 	desc = "slash slash all your worries away."
+	icon_state = "mecha_sword"
+	damage_type = BRUTE
+	melee_flags = WIDE_ATTACK
 	damage = 45
 
+/obj/item/mecha_parts/mecha_equipment/melee/glove
+	name = "mecha glove"
+	desc = "the flesh is weak."
+	icon_state = "mecha_glove"
+	damage_type = STAMINA
+	damage = 60
+
+/obj/item/mecha_parts/mecha_equipment/melee/fist
+	name = "mecha fist"
+	desc = "NT-approved standard fit mecha fists. Guaranteed to decimate carps and other space threats."
+	icon_state = "mecha_fist"
+	melee_flags = STRUCTURE_DEMOLISHER
+	damage_type = BRUTE
+	damage = 30
+
+/obj/item/mecha_parts/mecha_equipment/melee/axe
+	name = "mecha battle axe"
+	desc = "A mech-sized version of the famous energy axe."
+	icon_state = "mecha_axe"
+	melee_flags = WIDE_ATTACK
+	damage_type = BURN
+	damage = 75
 
 

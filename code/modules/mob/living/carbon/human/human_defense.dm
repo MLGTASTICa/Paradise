@@ -753,7 +753,7 @@ emp_act
 		apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	if(M.occupant.a_intent == INTENT_HARM)
+	if(M.occupant.a_intent == INTENT_HARM && !QDELETED(hitter))
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
 			return

@@ -151,7 +151,7 @@
 
 
 /mob/living/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	if(M.occupant.a_intent == INTENT_HARM)
+	if(M.occupant.a_intent == INTENT_HARM && !QDELETED(hitter))
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
 			return
@@ -172,13 +172,13 @@
 		updatehealth("mech melee attack")
 		M.visible_message("<span class='userdanger'>[M] attacks [src]!</span>")
 		visible_message("<span class='userdanger'>[src] is hit with [M]'s [hitter]</span>", "<span class='userdanger'>[M] attacks you with their [hitter]</span>")
-		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
+		add_attack_logs(M.occupant, src, "Mecha-meleed by [M] using [hitter]")
 		return maxHealth - health
 	else
 		step_away(src,M)
 		M.visible_message("<span class='warning'>[M] pushes [src]!</span>")
-		visible_message("<span class='warning'>[src] is pushed by [M]'s [hitter]</span>", "<span class='warning'>[M] pushes you with their [hitter]</span>")
-		add_attack_logs(M.occupant, src, "Mecha-pushed with [M]", ATKLOG_ALL)
+		visible_message("<span class='warning'>[src] is pushed by [M] </span>", "<span class='warning'>[M] pushes you!</span>")
+		add_attack_logs(M.occupant, src, "Mecha-pushed by [M]", ATKLOG_ALL)
 		return 0
 
 //Mobs on Fire
