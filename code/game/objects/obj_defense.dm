@@ -134,8 +134,9 @@
 	attack_generic(user, rand(10, 15), BRUTE, MELEE, 1)
 
 /obj/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
-	M.visible_message("[M] hits [src]!")
-	return take_damage(damage, damage_type, MELEE, TRUE, get_dir(src, M))
+	if(hitter)
+		return attacked_by(hitter, M)
+	return 0
 
 /obj/singularity_act()
 	ex_act(EXPLODE_DEVASTATE)
