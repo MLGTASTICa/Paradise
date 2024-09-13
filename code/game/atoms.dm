@@ -275,7 +275,7 @@
 			pixel_y = pixel_south
 			pixel_x = pixel_west
 
-///Handle melee attack by a mech
+///Handle melee attack by a mech , Return -1 to stop afterattack from being called
 /atom/proc/mech_melee_attack(obj/mecha/M, damage, damage_type, obj/item/mecha_parts/mecha_equipment/melee/hitter)
 	return 0
 

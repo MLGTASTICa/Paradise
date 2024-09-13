@@ -756,27 +756,19 @@ emp_act
 	if(M.occupant.a_intent == INTENT_HARM && !QDELETED(hitter))
 		if(HAS_TRAIT(M.occupant, TRAIT_PACIFISM))
 			to_chat(M.occupant, "<span class='warning'>You don't want to harm other living beings!</span>")
-			return
-		M.do_attack_animation(src)
-		if(damage_type == BRUTE)
-			step_away(src,M,15)
-		attacked_by(hitter, M?.occupant, pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
+			return -1
 		switch(damage_type)
 			if(BRUTE)
-				apply_damage(damage/2, STAMINA)
-				if(damage > 35) // durand and other heavy mechas
-					KnockDown(6 SECONDS)
-				else if(damage > 20 && !IsKnockedDown()) // lightweight mechas like gygax
-					KnockDown(4 SECONDS)
+				attacked_by(hitter, M?.occupant, pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
+			if(BURN)
+				attacked_by(hitter, M?.occupant, pick(BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_CHEST, BODY_ZONE_HEAD))
 			if(TOX)
 				M.mech_toxin_damage(src)
 		updatehealth("mech melee attack")
-		M.visible_message("<span class='userdanger'>[M] attacks [src]!</span>")
-		visible_message("<span class='userdanger'>[src] is hit with [M]'s [hitter]</span>", "<span class='userdanger'>[M] attacks you with their [hitter]</span>")
-		add_attack_logs(M.occupant, src, "Mecha-meleed with [M]")
+		add_attack_logs(M.occupant, src, "Mecha-meleed with [M], piloted by [M?.occupant] using [hitter]")
 		return maxHealth - health
 	else
-		..()
+		. = ..()
 
 /mob/living/carbon/human/experience_pressure_difference(flow_x, flow_y)
 	playsound(src, 'sound/effects/space_wind.ogg', 50, TRUE)

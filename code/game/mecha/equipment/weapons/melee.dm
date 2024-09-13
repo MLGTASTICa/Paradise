@@ -5,6 +5,8 @@
 #define WIDE_ATTACK_CONCENTRATED (1<<1)
 /// Deals 3x damage against structures
 #define STRUCTURE_DEMOLISHER (1<<2)
+/// Deals 2x damage against structures
+#define STRUCTURE_HATER (1<<3)
 
 /obj/item/mecha_parts/mecha_equipment/melee
 	name = "mecha melee weapon"
@@ -26,7 +28,8 @@
 			return FALSE
 		return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/melee/proc/after_attack(atom/target)
+/obj/item/mecha_parts/mecha_equipment/melee/proc/after_mech_attack(atom/target, damage_dealt)
+	chassis.do_attack_animation(target, null, src)
 	return
 
 /obj/effect/melee_swing
@@ -55,14 +58,16 @@
 		var/target_dir = get_dir(chassis, target)
 		var/current_turf = get_step(chassis, target_dir)
 		var/attack_angle = 90
-		if(target_dir in list(NORTHEST,SOUTHEAST, NORTHWEST, SOUTHWEST))
-			attack_angle = 45
+		if(target_dir in list(NORTHEAST,SOUTHEAST, NORTHWEST, SOUTHWEST))
+			attack_angle += 45
 		new /obj/effect/melee_swing(get_turf(chassis), target_dir)
 		attack_turfs.Add(get_step(current_turf, turn(target_dir,attack_angle)))
 		attack_turfs.Add(current_turf)
 		attack_turfs.Add(get_step(current_turf, turn(target_dir,-attack_angle)))
 		for(var/turf/target_turf in attack_turfs)
 			for(var/atom/attackable in target_turf.contents)
+				if(!isliving(attackable) || !isstructure(attackable))
+					continue
 				attack_target(attackable)
 	else if(melee_flags == WIDE_ATTACK_CONCENTRATED)
 		for(var/atom/attackable in sound_turf)
@@ -79,8 +84,11 @@
 
 /obj/item/mecha_parts/mecha_equipment/melee/proc/attack_target(atom/target)
 	var/true_damage = force
-	if(melee_flags & STRUCTURE_DEMOLISHER && isstructure(target))
-		true_damage *= 3
+	if(isstructure(target))
+		if(melee_flags & STRUCTURE_DEMOLISHER)
+			true_damage *= 3
+		if(melee_flags & STRUCTURE_HATER)
+			true_damage *= 2
 	if(melee_flags & WIDE_ATTACK_CONCENTRATED)
 		true_damage *= 1.2
 	else if(melee_flags & WIDE_ATTACK)
@@ -88,8 +96,8 @@
 	force = true_damage
 	var/damage_dealt = target.mech_melee_attack(chassis, true_damage, damtype, src)
 	force = initial(force)
-	if(!QDELETED(target))
-		after_attack(target, damage_dealt)
+	if(!QDELETED(target) && damage_dealt != -1)
+		after_mech_attack(target, damage_dealt)
 
 /obj/item/mecha_parts/mecha_equipment/melee/sword
 	name = "mecha sword"
@@ -110,9 +118,18 @@
 	name = "mecha fist"
 	desc = "NT-approved standard fit mecha fists. Guaranteed to decimate carps and other space threats."
 	icon_state = "mecha_fist"
-	melee_flags = STRUCTURE_DEMOLISHER
+	melee_flags = STRUCTURE_HATER
 	damtype = BRUTE
 	force = 30
+
+/obj/item/mecha_parts/mecha_equipment/melee/fist/after_mech_attack(atom/target, damage_dealt)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/cast = target
+		if(ishuman(cast))
+			cast.KnockDown(rand(4,6) SECONDS)
+		else
+			cast.Paralyse(2 SECONDS)
 
 /obj/item/mecha_parts/mecha_equipment/melee/axe
 	name = "mecha battle axe"

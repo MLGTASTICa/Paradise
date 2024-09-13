@@ -224,7 +224,6 @@
 			add_dent(PROJECTILE_IMPACT_WALL_DENT_HIT)
 			return 0
 
-
 // Wall-rot effect, a nasty fungus that destroys walls.
 /turf/simulated/wall/proc/rot()
 	if(!rotting)
