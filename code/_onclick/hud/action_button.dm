@@ -184,7 +184,7 @@
 		to_chat(user, "<span class='notice'>Your active keybinding on [src] has been cleared.</span>")
 
 /atom/movable/screen/movable/action_button/AltClick(mob/user)
-	return linked_action.AltTrigger()
+	return linked_action.AltTrigger(user)
 
 /atom/movable/screen/movable/action_button/proc/clean_up_keybinds(mob/owner)
 	if(!linked_keybind || !owner.client)

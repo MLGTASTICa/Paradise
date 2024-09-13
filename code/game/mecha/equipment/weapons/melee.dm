@@ -32,6 +32,17 @@
 	chassis.do_attack_animation(target, null, src)
 	return
 
+/obj/item/mecha_parts/mecha_equipment/melee/AltClick(mob/user)
+	. = ..()
+	if(initial(melee_flags) & WIDE_ATTACK)
+		if(melee_flags & WIDE_ATTACK_CONCENTRATED)
+			melee_flags &= ~WIDE_ATTACK_CONCENTRATED
+			melee_flags |= WIDE_ATTACK
+		else
+			melee_flags &= ~WIDE_ATTACK
+			melee_flags |= WIDE_ATTACK_CONCENTRATED
+		to_chat(user, "Your attacks are now [melee_flags & WIDE_ATTACK ? "spread out" : "concentrated"]! ")
+
 /obj/effect/melee_swing
 	icon = 'icons/mecha/mecha_swing.dmi'
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
@@ -66,11 +77,21 @@
 		attack_turfs.Add(get_step(current_turf, turn(target_dir,-attack_angle)))
 		for(var/turf/target_turf in attack_turfs)
 			for(var/atom/attackable in target_turf.contents)
-				if(!isliving(attackable) || !isstructure(attackable))
+				if(isstructure(attackable))
+					var/obj/structure/the_structure = attackable
+					if(the_structure.level <= 1)
+						continue
+				else if(!isliving(attackable))
 					continue
 				attack_target(attackable)
 	else if(melee_flags == WIDE_ATTACK_CONCENTRATED)
 		for(var/atom/attackable in sound_turf)
+			if(isstructure(attackable))
+				var/obj/structure/the_structure = attackable
+				if(the_structure.level <= 1)
+					continue
+			else if(!isliving(attackable))
+				continue
 			attack_target(attackable)
 	else
 		attack_target(target)
